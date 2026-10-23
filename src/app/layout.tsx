@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Sky from "./Sky";
-import ThemeSwitcher from "./ThemeSwitcher";
 
 const poppins = Poppins({ variable: "--font-poppins", weight: ["400", "500", "600", "700", "800"], subsets: ["latin"] });
 
@@ -21,9 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="id" className={poppins.variable} suppressHydrationWarning>
       <head><script dangerouslySetInnerHTML={{ __html: initTheme }} /></head>
       <body>
-        <Sky />
         {children}
-        <ThemeSwitcher />
       </body>
     </html>
   );

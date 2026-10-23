@@ -1,0 +1,71 @@
+/* Halaman publik: ringan (CSS saja), tema lewat variabel --bg1/--bg2/--tx/--bb/--bt/--br. */
+.pub {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow-y: auto;
+  color: var(--tx);
+  display: flex;
+  justify-content: center;
+  padding: 36px 16px 28px;
+}
+.pub-solid { background: var(--bg1); }
+.pub-gradient { background: linear-gradient(180deg, var(--bg1), var(--bg2)); }
+.pub-3d { background: radial-gradient(120% 90% at 20% 0%, var(--bg2), var(--bg1)); }
+
+.pub-wrap { position: relative; z-index: 1; width: 100%; max-width: 480px; text-align: center; margin: auto 0; }
+.pub-avatar { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 4px solid color-mix(in srgb, var(--tx) 12%, transparent); box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.35); }
+.pub-initial { display: inline-flex; align-items: center; justify-content: center; font-size: 2.4rem; font-weight: 800; background: var(--bb); color: var(--bt); }
+.pub h1 { margin: 12px 0 0; font-size: 1.5rem; }
+.pub-user { margin: 2px 0 0; opacity: 0.7; font-size: 0.9rem; }
+.pub-bio { margin: 10px auto 0; max-width: 40ch; line-height: 1.55; opacity: 0.9; white-space: pre-line; }
+
+.pub-links { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 14px; }
+.pub-heading { margin-top: 8px; font-weight: 700; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem; }
+
+.pl {
+  display: block;
+  padding: 15px 18px;
+  border-radius: var(--br);
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--bb);
+  color: var(--bt);
+  overflow-wrap: anywhere;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.pl-social { padding: 10px 16px; font-size: 0.9rem; }
+.pbtn-outline .pl { background: transparent; color: var(--bb); border: 2px solid var(--bb); }
+.pbtn-3d .pl { background: linear-gradient(180deg, color-mix(in srgb, var(--bb) 82%, white), var(--bb)); box-shadow: 0 5px 0 color-mix(in srgb, var(--bb) 60%, black), 0 10px 18px rgba(0, 0, 0, 0.18); }
+.pbtn-3d .pl:active { transform: translateY(4px); box-shadow: 0 1px 0 color-mix(in srgb, var(--bb) 60%, black); }
+.pl:hover { filter: brightness(1.06); }
+.tilt .pl:hover { transform: perspective(600px) rotateX(7deg) rotateY(-4deg) translateY(-3px) scale(1.02); }
+.pub .pl:focus-visible { outline: 3px solid color-mix(in srgb, var(--tx) 60%, transparent); outline-offset: 2px; }
+
+.pub-foot { margin-top: 30px; display: flex; flex-direction: column; gap: 6px; align-items: center; font-size: 0.8rem; }
+.pub-foot a { color: var(--tx); opacity: 0.65; text-decoration: none; }
+.pub-foot a:hover { opacity: 1; text-decoration: underline; }
+
+/* latar 3D: bentuk melayang, murni CSS */
+.pub-shapes { position: absolute; inset: 0; overflow: hidden; perspective: 800px; pointer-events: none; }
+.pub-shapes i {
+  position: absolute; width: 90px; height: 90px; border-radius: 22px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--bb) 70%, transparent), color-mix(in srgb, var(--tx) 15%, transparent));
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.35);
+  animation: pub-float 14s ease-in-out infinite;
+}
+.pub-shapes i:nth-child(1) { left: 6%; top: 10%; }
+.pub-shapes i:nth-child(2) { right: 8%; top: 22%; width: 60px; height: 60px; animation-delay: -4s; }
+.pub-shapes i:nth-child(3) { left: 14%; top: 62%; width: 70px; height: 70px; animation-delay: -8s; }
+.pub-shapes i:nth-child(4) { right: 12%; top: 70%; width: 110px; height: 110px; animation-delay: -2s; }
+.pub-shapes i:nth-child(5) { left: 48%; top: 4%; width: 44px; height: 44px; animation-delay: -6s; }
+@keyframes pub-float {
+  0%, 100% { transform: translateY(0) rotateX(0) rotateY(0) rotate(0); }
+  50% { transform: translateY(-26px) rotateX(35deg) rotateY(40deg) rotate(12deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pub-shapes i { animation: none; }
+  .pl { transition: none; }
+  .tilt .pl:hover { transform: none; }
+}

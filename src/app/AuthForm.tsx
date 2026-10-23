@@ -19,6 +19,7 @@ export default function AuthForm({
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget;
     setBusy(true);
     setMsg("");
     const body = { ...hidden, ...Object.fromEntries(new FormData(e.currentTarget)) };
@@ -30,6 +31,7 @@ export default function AuthForm({
       window.location.href = data.role === "admin" && redirectTo === "/dashboard" ? "/admin" : redirectTo;
       return;
     }
+    form.reset(); // sukses tanpa redirect (daftar, lupa password): kosongkan semua input
     setMsg(successMessage || "Berhasil");
   }
 
