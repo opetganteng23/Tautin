@@ -1,7 +1,8 @@
 // Backup MongoDB ke berkas gzip JSON per koleksi, simpan 14 hari terakhir.
 // Pakai: node --env-file=.env scripts/backup-mongo.mjs [folder-tujuan]
 // Jadwal (cron server): 30 2 * * * cd ~/apps/tautin && node --env-file=.env scripts/backup-mongo.mjs
-import { MongoClient, EJSON } from "mongodb";
+import mongodb from "mongodb";
+const { MongoClient, EJSON } = mongodb;
 import { createGzip } from "node:zlib";
 import { createWriteStream, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { pipeline } from "node:stream/promises";
