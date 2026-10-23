@@ -2,7 +2,8 @@
 // Pakai: node --env-file=.env scripts/backup-mongo.mjs [folder-tujuan]
 // Jadwal (cron server): 30 2 * * * cd ~/apps/tautin && node --env-file=.env scripts/backup-mongo.mjs
 import mongodb from "mongodb";
-const { MongoClient, EJSON } = mongodb;
+const { MongoClient, BSON } = mongodb;
+const EJSON = BSON.EJSON;
 import { createGzip } from "node:zlib";
 import { createWriteStream, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { pipeline } from "node:stream/promises";
