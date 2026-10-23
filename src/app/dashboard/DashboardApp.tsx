@@ -268,7 +268,7 @@ function Chart({ series }: { series: { date: string; views: number; clicks: numb
 interface PlanPub { id: string; name: string; priceMonthly: number; priceYearly: number; maxLinks: number; analyticsLevel: string; removeBranding: boolean; trialDays: number; isFree: boolean; allThemes: boolean }
 interface SubData {
   user: { email: string; emailVerified: boolean; trialUsed: boolean }; plan: PlanPub; state: "free" | "active" | "grace" | "freemode";
-  expiresAt: string | null; graceDays: number; freeMode: boolean; plans: PlanPub[];
+  expiresAt: string | null; graceDays: number; freeMode: boolean; paymentsEnabled: boolean; plans: PlanPub[];
   orders: { id: string; orderId: string; planName: string; period: string; amount: number; status: string; paymentType?: string; createdAt: string }[];
 }
 declare global { interface Window { snap?: { pay: (token: string, o: Record<string, () => void>) => void } } }
@@ -341,12 +341,13 @@ function PlanTab({ flash }: { flash: Flash }) {
                 <li>{p.allThemes ? "Semua tema 3D premium" : "Tema dasar"}</li>
                 {p.removeBranding && <li>Tanpa label Tautin</li>}
               </ul>
-              <button disabled={busy === p.id || price <= 0} onClick={() => pay(p)}>{busy === p.id ? "Memproses…" : data.plan.id === p.id ? "Perpanjang" : "Bayar"}</button>
+              <button disabled={!data.paymentsEnabled || busy === p.id || price <= 0} onClick={() => pay(p)}>{!data.paymentsEnabled ? "Pembayaran segera dibuka" : busy === p.id ? "Memproses…" : data.plan.id === p.id ? "Perpanjang" : "Bayar"}</button>
               {p.trialDays > 0 && !data.user.trialUsed && data.state !== "active" && <button type="button" className="sm ghost" style={{ marginTop: 10 }} onClick={() => trial(p)}>Coba gratis {p.trialDays} hari</button>}
             </section>
           );
         })}
       </div>
+      {!data.paymentsEnabled && <p className="hint"><b>Pembayaran belum dibuka.</b> Anda tetap bisa memakai paket Free{data.user.trialUsed ? "" : " atau mencoba trial gratis"}.</p>}
       <p className="hint">Prabayar lewat QRIS &amp; Virtual Account: tidak ada tagihan otomatis. Perpanjangan menambah masa aktif dari tanggal berakhir saat ini.</p>
 
       <h2 className="sec">Riwayat pembayaran</h2>

@@ -12,6 +12,7 @@ export async function GET() {
 
 const schema = z.object({
   freeModeGlobal: z.boolean(),
+  paymentsEnabled: z.boolean(),
   gracePeriodDays: z.number().int().min(0).max(90),
   reservedUsernames: z.array(z.string().trim().toLowerCase().min(1).max(40)).max(1000),
 });

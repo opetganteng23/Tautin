@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/session";
 import { rateLimit } from "@/lib/ratelimit";
 import { createSnapTransaction, snapScriptUrl } from "@/lib/midtrans";
 import { env } from "@/lib/env";
+import { getSettings } from "@/lib/plans";
 import { bad, oid, unauthorized } from "@/lib/api";
 import type { Order, Plan } from "@/lib/types";
 
@@ -15,6 +16,7 @@ const schema = z.object({ planId: z.string(), period: z.enum(["monthly", "yearly
 export async function POST(req: Request) {
   const u = await getCurrentUser();
   if (!u) return unauthorized();
+  if (!(await getSettings()).paymentsEnabled) return bad("Pembayaran belum dibuka. Silakan coba lagi nanti.", 403);
   if (!(await rateLimit(`order:${u._id}`, 10, 3600))) return bad("Terlalu banyak percobaan, coba lagi nanti", 429);
   const parsed = schema.safeParse(await req.json().catch(() => null));
   const planId = parsed.success ? oid(parsed.data.planId) : null;

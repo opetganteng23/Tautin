@@ -29,6 +29,6 @@ export async function ensureDefaults(db: Db) {
   if ((await themes.countDocuments()) === 0) await themes.insertMany(THEMES);
   const settings = db.collection("settings");
   if ((await settings.countDocuments()) === 0) {
-    await settings.insertOne({ freeModeGlobal: false, reservedUsernames: DEFAULT_RESERVED, gracePeriodDays: 7 });
+    await settings.insertOne({ freeModeGlobal: false, reservedUsernames: DEFAULT_RESERVED, gracePeriodDays: 7, paymentsEnabled: false });
   }
 }

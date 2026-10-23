@@ -34,7 +34,7 @@ export default async function Pricing() {
             </section>
           ))}
         </div>
-        <p>Pembayaran prabayar lewat QRIS &amp; Virtual Account. Tidak ada tagihan otomatis.</p>
+        <p>Pembayaran paket berbayar akan segera dibuka. Prabayar lewat QRIS &amp; Virtual Account. Tidak ada tagihan otomatis.</p>
       </main>
     </Shell>
   );

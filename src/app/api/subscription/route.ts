@@ -23,6 +23,7 @@ export async function GET() {
     expiresAt: u.planExpiresAt,
     graceDays: settings.gracePeriodDays,
     freeMode: settings.freeModeGlobal,
+    paymentsEnabled: settings.paymentsEnabled,
     plans: plans.map(publicPlan),
     orders: orders.map((o) => ({ id: o._id.toString(), orderId: o.midtransOrderId, planName: o.planName, period: o.period, amount: o.amount, status: o.status, paymentType: o.paymentType, createdAt: o.createdAt, paidAt: o.paidAt })),
   });

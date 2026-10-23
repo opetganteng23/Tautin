@@ -10,6 +10,7 @@ export async function getSettings(): Promise<Settings> {
     freeModeGlobal: s?.freeModeGlobal ?? false,
     reservedUsernames: s?.reservedUsernames ?? DEFAULT_RESERVED,
     gracePeriodDays: s?.gracePeriodDays ?? 7,
+    paymentsEnabled: s?.paymentsEnabled ?? false,
   };
 }
 

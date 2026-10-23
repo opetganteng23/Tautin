@@ -267,19 +267,20 @@ function Blocklist({ flash }: { flash: Flash }) {
 
 /* ------------------------------ Pengaturan -------------------------- */
 function SettingsTab({ flash }: { flash: Flash }) {
-  const { data, reload } = useLoad<{ freeModeGlobal: boolean; gracePeriodDays: number; reservedUsernames: string[] }>("/api/admin/settings");
-  const [f, setF] = useState<{ freeModeGlobal: boolean; gracePeriodDays: number; reserved: string } | null>(null);
-  if (data && !f) setF({ freeModeGlobal: data.freeModeGlobal, gracePeriodDays: data.gracePeriodDays, reserved: data.reservedUsernames.join(", ") });
+  const { data, reload } = useLoad<{ freeModeGlobal: boolean; paymentsEnabled: boolean; gracePeriodDays: number; reservedUsernames: string[] }>("/api/admin/settings");
+  const [f, setF] = useState<{ freeModeGlobal: boolean; paymentsEnabled: boolean; gracePeriodDays: number; reserved: string } | null>(null);
+  if (data && !f) setF({ freeModeGlobal: data.freeModeGlobal, paymentsEnabled: data.paymentsEnabled, gracePeriodDays: data.gracePeriodDays, reserved: data.reservedUsernames.join(", ") });
   if (!f) return <p className="hint">Memuat…</p>;
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     return attempt(flash, () => api("/api/admin/settings", "PUT", {
-      freeModeGlobal: f.freeModeGlobal, gracePeriodDays: f.gracePeriodDays,
+      freeModeGlobal: f.freeModeGlobal, paymentsEnabled: f.paymentsEnabled, gracePeriodDays: f.gracePeriodDays,
       reservedUsernames: f.reserved.split(/[\s,]+/).filter(Boolean),
     }), "Pengaturan disimpan", reload);
   };
   return (
     <form className="card2" onSubmit={save}>
+      <label className="row" style={{ marginBottom: 10 }}><input type="checkbox" checked={f.paymentsEnabled} onChange={(e) => setF({ ...f, paymentsEnabled: e.target.checked })} /> <b>Pembayaran dibuka</b> (Midtrans). Mati = tombol Bayar nonaktif dan order baru ditolak.</label>
       <label className="row"><input type="checkbox" checked={f.freeModeGlobal} onChange={(e) => setF({ ...f, freeModeGlobal: e.target.checked })} /> <b>Mode gratis global</b> (buka semua fitur premium untuk semua user, sementara)</label>
       <label className="field" style={{ margin: "12px 0", maxWidth: 260 }}>Masa tenggang setelah kedaluwarsa (hari)
         <input type="number" min={0} max={90} value={f.gracePeriodDays} onChange={(e) => setF({ ...f, gracePeriodDays: Number(e.target.value) })} />

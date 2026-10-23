@@ -99,4 +99,6 @@ export interface Settings {
   freeModeGlobal: boolean;
   reservedUsernames: string[];
   gracePeriodDays: number;
+  /** Saklar pembayaran Midtrans. Mati = tombol Bayar nonaktif dan /api/orders menolak. */
+  paymentsEnabled: boolean;
 }
