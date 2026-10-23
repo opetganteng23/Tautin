@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Redeploy tautin on the server. Installed as ~/bin/redeploy-tautin.
+set -e
+cd /home/ailolabs/apps/tautin
+
+echo "==> Pulling latest changes (tautin)..."
+git checkout -- package-lock.json 2>/dev/null || true
+git pull origin main
+
+echo "==> Installing dependencies and building (memory-capped)..."
+# This server is shared with many other apps and its swap is nearly full. Run
+# install + build in a cgroup with a hard memory limit, so a runaway build is
+# killed on its own instead of the kernel OOM-killer picking another app.
+BUILD_CMD="export HOME='$HOME'; cd '$PWD' && npm ci && NODE_OPTIONS=--max-old-space-size=768 npm run build"
+if command -v systemd-run >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
+  sudo -n systemd-run --scope --quiet --uid="$(id -u)" --gid="$(id -g)" \
+    -p MemoryMax=1000M -p MemorySwapMax=0 bash -c "$BUILD_CMD"
+else
+  echo "!! systemd-run/sudo unavailable, building without a memory cap"
+  bash -c "$BUILD_CMD"
+fi
+
+echo "==> Restarting pm2 process..."
+if pm2 describe tautin >/dev/null 2>&1; then
+  pm2 restart tautin --update-env
+else
+  pm2 start ecosystem.config.cjs
+fi
+pm2 save >/dev/null
+
+echo "==> Waiting for process to settle..."
+sleep 3
+
+echo "==> Health check..."
+HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:5012/ || echo 'FAILED')
+if [ "$HTTP_CODE" != "200" ]; then
+  echo "!! WARNING: / returned $HTTP_CODE instead of 200 - check logs below"
+else
+  echo "==> / responded 200 OK"
+fi
+
+echo "==> Recent logs:"
+pm2 logs tautin --lines 15 --nostream
